@@ -1,6 +1,12 @@
-// TimelineExperience.jsx
 import React from "react";
-import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Typography,
+  useTheme,
+  useMediaQuery,
+  Paper,
+  Divider,
+} from "@mui/material";
 import {
   Timeline,
   TimelineItem,
@@ -9,6 +15,7 @@ import {
   TimelineContent,
   TimelineDot,
 } from "@mui/lab";
+import { motion } from "framer-motion";
 
 const Experience = () => {
   const theme = useTheme();
@@ -37,46 +44,67 @@ const Experience = () => {
   ];
 
   return (
-    <Box px={2} py={6}>
-      <Typography variant="h4" fontWeight="bold" mb={4} textAlign="center">
-        Experience
+    <Box
+      id="experience"
+      sx={{
+        minHeight: "100vh",
+        px: { xs: 3, md: 10 },
+        py: 10,
+        background: "linear-gradient(to right, #ffffff, #f0f4fc)",
+      }}
+    >
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        gutterBottom
+        sx={{ color: "#1a237e", textAlign: "center" }}
+      >
+        💼 Experience
       </Typography>
 
-      <Timeline position={isSmallScreen ? "right" : "alternate"}>
-        {experiences.map((exp, index) => (
-          <TimelineItem key={index}>
-            <TimelineSeparator>
-              <TimelineDot color="primary" />
-              {index < experiences.length - 1 && <TimelineConnector />}
-            </TimelineSeparator>
-            <TimelineContent>
-              <Typography variant="h6" fontWeight="bold" gutterBottom>
-                {exp.role}
-              </Typography>
-              <Typography
-                variant="subtitle2"
-                color="text.secondary"
-                gutterBottom
-              >
-                {exp.company} • {exp.duration}
-              </Typography>
-              <ul style={{ paddingLeft: 20, margin: 0 }}>
-                {exp.responsibilities.map((item, i) => (
-                  <li key={i} style={{ marginBottom: 4 }}>
-                    <Typography variant="body2">{item}</Typography>
-                  </li>
-                ))}
-              </ul>
-            </TimelineContent>
-          </TimelineItem>
-        ))}
-      </Timeline>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <Timeline position={isSmallScreen ? "right" : "alternate"}>
+          {experiences.map((exp, index) => (
+            <TimelineItem key={index}>
+              <TimelineSeparator>
+                <TimelineDot color="primary" />
+                {index < experiences.length - 1 && <TimelineConnector />}
+              </TimelineSeparator>
+              <TimelineContent>
+                <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
+                  <Typography variant="h6" fontWeight="bold">
+                    {exp.role}
+                  </Typography>
+                  <Typography
+                    variant="subtitle2"
+                    color="text.secondary"
+                    gutterBottom
+                  >
+                    {exp.company} • {exp.duration}
+                  </Typography>
+                  <Divider sx={{ mb: 2 }} />
+                  <ul style={{ paddingLeft: 20, margin: 0 }}>
+                    {exp.responsibilities.map((item, i) => (
+                      <li key={i} style={{ marginBottom: 4 }}>
+                        <Typography variant="body2">{item}</Typography>
+                      </li>
+                    ))}
+                  </ul>
+                </Paper>
+              </TimelineContent>
+            </TimelineItem>
+          ))}
+        </Timeline>
+      </motion.div>
     </Box>
   );
 };
 
 export default Experience;
-
 
 
 

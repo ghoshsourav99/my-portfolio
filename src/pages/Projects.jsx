@@ -18,8 +18,8 @@ const projects = [
     description:
       "A personal portfolio website to showcase my skills, built with React, Vite and Material UI. Fully responsive and minimal.",
     tech: ["React", "Vite", "Material UI"],
-    github: "https://github.com/yourusername/portfolio",
-    demo: "https://yourportfolio.vercel.app/",
+    github: "https://github.com/ghoshsourav99/my-portfolio",
+    demo: "https://my-portfolio-five-omega-72.vercel.app/",
   },
   {
     title: "Weather Checking App",
