@@ -7,9 +7,11 @@ import {
   Paper,
   Stack,
   Divider,
-  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -18,8 +20,7 @@ const Contact = () => {
     message: "",
   });
 
-  const [responseMsg, setResponseMsg] = useState("");
-  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,30 +28,32 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setResponseMsg("");
-    setError(false);
+    setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "https://portfolio-backend-ucxo.onrender.com/api/contact",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json();
       if (data.success) {
-        setResponseMsg("✅ " + data.message);
-        setFormData({ name: "", email: "", message: "" }); // reset form
+        toast.success("✅ " + data.message);
+        setFormData({ name: "", email: "", message: "" });
       } else {
-        setError(true);
-        setResponseMsg("❌ Something went wrong");
+        toast.error("❌ Something went wrong.");
       }
     } catch (err) {
-      setError(true);
-      setResponseMsg("❌ Server error, please try again later.");
+      toast.error("❌ Server error, please try again later.");
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,18 +128,30 @@ const Contact = () => {
                 rows={4}
                 required
               />
-              <Button type="submit" variant="contained" color="primary">
-                Send Message
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={loading}
+                startIcon={loading && <CircularProgress size={20} />}
+              >
+                {loading ? "Sending..." : "Send Message"}
               </Button>
-              {responseMsg && (
-                <Alert severity={error ? "error" : "success"}>
-                  {responseMsg}
-                </Alert>
-              )}
             </Stack>
           </form>
         </Paper>
       </motion.div>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss={false}
+        draggable
+        pauseOnHover
+      />
     </Box>
   );
 };
