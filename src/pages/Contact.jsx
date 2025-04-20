@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -7,10 +7,53 @@ import {
   Paper,
   Stack,
   Divider,
+  Alert,
 } from "@mui/material";
 import { motion } from "framer-motion";
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [responseMsg, setResponseMsg] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setResponseMsg("");
+    setError(false);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setResponseMsg("✅ " + data.message);
+        setFormData({ name: "", email: "", message: "" }); // reset form
+      } else {
+        setError(true);
+        setResponseMsg("❌ Something went wrong");
+      }
+    } catch (err) {
+      setError(true);
+      setResponseMsg("❌ Server error, please try again later.");
+      console.error(err);
+    }
+  };
+
   return (
     <Box
       id="contact"
@@ -49,20 +92,49 @@ const Contact = () => {
             Let’s work together!
           </Typography>
           <Divider sx={{ mb: 3 }} />
-          <Stack spacing={3}>
-            <TextField label="Name" variant="outlined" fullWidth />
-            <TextField label="Email" variant="outlined" fullWidth />
-            <TextField
-              label="Message"
-              variant="outlined"
-              fullWidth
-              multiline
-              rows={4}
-            />
-            <Button variant="contained" color="primary">
-              Send Message
-            </Button>
-          </Stack>
+
+          <form onSubmit={handleSubmit}>
+            <Stack spacing={3}>
+              <TextField
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                required
+              />
+              <TextField
+                label="Email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                type="email"
+                variant="outlined"
+                fullWidth
+                required
+              />
+              <TextField
+                label="Message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={4}
+                required
+              />
+              <Button type="submit" variant="contained" color="primary">
+                Send Message
+              </Button>
+              {responseMsg && (
+                <Alert severity={error ? "error" : "success"}>
+                  {responseMsg}
+                </Alert>
+              )}
+            </Stack>
+          </form>
         </Paper>
       </motion.div>
     </Box>
