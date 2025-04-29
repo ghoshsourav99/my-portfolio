@@ -66,7 +66,7 @@ const Home = () => {
                 Download Resume
               </Button>
 
-              <Button
+              {/* <Button
                 variant="outlined"
                 href="/contact"
                 sx={{
@@ -83,7 +83,7 @@ const Home = () => {
                 }}
               >
                 Let’s Connect
-              </Button>
+              </Button> */}
             </Stack>
           </motion.div>
         </Grid>
