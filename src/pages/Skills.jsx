@@ -21,9 +21,11 @@ const tools = [
   "VS Code",
   "Netlify",
   "Vercel",
+  "Render",
+  "Postman",
 ];
 
-const learning = ["TypeScript", "Tailwind CSS", "Node.js", "Framer Motion"];
+const learning = ["TypeScript","Jest", "Tailwind CSS", "Node.js","Express.js", "Framer Motion","MongoDB", "PostgreSQL basics","GraphQL"]; 
 
 const Skills = () => {
   return (
